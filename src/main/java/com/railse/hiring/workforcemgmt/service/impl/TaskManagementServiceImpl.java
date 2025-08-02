@@ -3,6 +3,8 @@ package com.railse.hiring.workforcemgmt.service.impl;
 import com.railse.hiring.workforcemgmt.common.exception.ResourceNotFoundException;
 import com.railse.hiring.workforcemgmt.dto.*;
 import com.railse.hiring.workforcemgmt.mapper.ITaskManagementMapper;
+import com.railse.hiring.workforcemgmt.model.ActivityLog;
+import com.railse.hiring.workforcemgmt.model.TaskComment;
 import com.railse.hiring.workforcemgmt.model.TaskManagement;
 import com.railse.hiring.workforcemgmt.model.enums.Task;
 import com.railse.hiring.workforcemgmt.model.enums.TaskStatus;
@@ -141,5 +143,12 @@ public class TaskManagementServiceImpl implements TaskManagementService {
         .filter(task -> task.getPriority() == priority)
         .collect(Collectors.toList());
     return taskMapper.modelListToDtoList(filtered);
+  }
+  @Override
+  public void addComment(Long taskId, String author, String comment) {
+    TaskManagement task = taskRepository.findById(taskId)
+      .orElseThrow(() -> new RuntimeException("Task not found"));
+    task.getComments().add(new TaskComment(author, comment));
+    task.getActivityLogs().add(new ActivityLog(author + " commented: " + comment));
   }
 }

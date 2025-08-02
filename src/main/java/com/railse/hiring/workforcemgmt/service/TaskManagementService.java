@@ -13,4 +13,5 @@ public interface TaskManagementService {
   TaskManagementDto findTaskById(Long id);
   List<TaskManagementDto> fetchByPriority(Priority priority);
   String updatePriority(Long taskId, Priority priority);
+  void addComment(Long taskId, String author, String comment);
 }
