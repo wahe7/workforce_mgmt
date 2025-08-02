@@ -45,6 +45,7 @@ public class TaskManagementServiceImpl implements TaskManagementService {
           newTask.setTaskDeadlineTime(item.getTaskDeadlineTime());
           newTask.setStatus(TaskStatus.ASSIGNED);
           newTask.setDescription("New task created.");
+          newTask.setStartTime(System.currentTimeMillis());
           createdTasks.add(taskRepository.save(newTask));
       }
       return taskMapper.modelListToDtoList(createdTasks);
@@ -93,6 +94,7 @@ public class TaskManagementServiceImpl implements TaskManagementService {
       newTask.setAssigneeId(request.getAssigneeId());
       newTask.setStatus(TaskStatus.ASSIGNED);
       newTask.setDescription("Reassigned by reference");
+      newTask.setStartTime(System.currentTimeMillis());
       taskRepository.save(newTask);
     }
 
@@ -102,9 +104,22 @@ public class TaskManagementServiceImpl implements TaskManagementService {
   @Override
   public List<TaskManagementDto> fetchTasksByDate(TaskFetchByDateRequest request) {
       List<TaskManagement> tasks = taskRepository.findByAssigneeIdIn(request.getAssigneeIds());
+      long from = request.getStartDate();
+      long to = request.getEndDate();
 
       List<TaskManagement> filteredTasks = tasks.stream()
-      .filter(task -> task.getStatus() != TaskStatus.CANCELLED)
+      .filter(task -> {
+        if (task.getStatus() == TaskStatus.CANCELLED) {
+          return false;
+        }
+        long startTime = task.getStartTime();
+        boolean withinRange = startTime >= from && startTime <= to;
+
+        boolean stillActive = startTime < from && 
+        (task.getStatus() == TaskStatus.ASSIGNED || task.getStatus() == TaskStatus.STARTED);
+
+        return withinRange || stillActive;
+      })
       .collect(Collectors.toList());
 
       return taskMapper.modelListToDtoList(filteredTasks);

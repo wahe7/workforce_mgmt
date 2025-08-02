@@ -23,5 +23,6 @@ public class TaskCreateRequest {
     private Long assigneeId;
     private Priority priority;
     private Long taskDeadlineTime;
+    private Long startTime;
   }
 }

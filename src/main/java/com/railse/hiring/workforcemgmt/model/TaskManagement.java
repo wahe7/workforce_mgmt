@@ -17,4 +17,5 @@ public class TaskManagement {
     private Long assigneeId;
     private Long taskDeadlineTime;
     private Priority priority;
+    private Long startTime;
 }
