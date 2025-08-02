@@ -1,5 +1,8 @@
 package com.railse.hiring.workforcemgmt.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.railse.hiring.workforcemgmt.common.model.enums.ReferenceType;
 import com.railse.hiring.workforcemgmt.model.enums.Priority;
 import com.railse.hiring.workforcemgmt.model.enums.Task;
@@ -18,4 +21,6 @@ public class TaskManagement {
     private Long taskDeadlineTime;
     private Priority priority;
     private Long startTime;
+    private List<ActivityLog> activityLogs = new ArrayList<>();
+    private List<TaskComment> comments = new ArrayList<>();
 }
