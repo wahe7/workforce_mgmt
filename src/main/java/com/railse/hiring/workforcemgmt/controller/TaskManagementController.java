@@ -58,4 +58,14 @@ public class TaskManagementController {
     List<TaskManagementDto> list = taskManagementService.fetchByPriority(priority);
     return ResponseEntity.ok(list);
   }
+
+  @PostMapping("/{taskId}/comment")
+  public ResponseEntity<String> addComment(
+    @PathVariable Long taskId,
+    @RequestBody AddCommentRequest request
+  ) {
+
+    taskManagementService.addComment(taskId, request.getAuthor(), request.getComment());
+    return ResponseEntity.ok("Comment added");
+  }
 }
