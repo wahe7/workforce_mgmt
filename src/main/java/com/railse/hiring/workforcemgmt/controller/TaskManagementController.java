@@ -2,7 +2,9 @@ package com.railse.hiring.workforcemgmt.controller;
 
 import com.railse.hiring.workforcemgmt.common.model.response.Response;
 import com.railse.hiring.workforcemgmt.dto.*;
+import com.railse.hiring.workforcemgmt.model.enums.Priority;
 import com.railse.hiring.workforcemgmt.service.TaskManagementService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,5 +42,20 @@ public class TaskManagementController {
   @PostMapping("/fetch-by-date/v2")
   public Response<List<TaskManagementDto>> fetchByDate(@RequestBody TaskFetchByDateRequest request) {
       return new Response<>(taskManagementService.fetchTasksByDate(request));
+  }
+
+  @PatchMapping("/{taskId}/priority")
+  public ResponseEntity<String> updatePriority(
+        @PathVariable Long taskId,
+        @RequestBody UpdateTaskPriorityRequest request
+  ) {
+    String message = taskManagementService.updatePriority(taskId, request.getPriority());
+    return ResponseEntity.ok(message);
+  }
+
+  @GetMapping("/priority/{priority}")
+  public ResponseEntity<List<TaskManagementDto>> fetchByPriority(@PathVariable Priority priority) {
+    List<TaskManagementDto> list = taskManagementService.fetchByPriority(priority);
+    return ResponseEntity.ok(list);
   }
 }

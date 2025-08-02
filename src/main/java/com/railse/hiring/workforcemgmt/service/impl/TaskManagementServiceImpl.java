@@ -6,6 +6,7 @@ import com.railse.hiring.workforcemgmt.mapper.ITaskManagementMapper;
 import com.railse.hiring.workforcemgmt.model.TaskManagement;
 import com.railse.hiring.workforcemgmt.model.enums.Task;
 import com.railse.hiring.workforcemgmt.model.enums.TaskStatus;
+import com.railse.hiring.workforcemgmt.model.enums.Priority;
 import com.railse.hiring.workforcemgmt.repository.TaskRepository;
 import com.railse.hiring.workforcemgmt.service.TaskManagementService;
 import org.springframework.stereotype.Service;
@@ -123,5 +124,22 @@ public class TaskManagementServiceImpl implements TaskManagementService {
       .collect(Collectors.toList());
 
       return taskMapper.modelListToDtoList(filteredTasks);
+  }
+
+  @Override
+  public String updatePriority(Long taskId, Priority priority) {
+    TaskManagement task = taskRepository.findById(taskId)
+    .orElseThrow(() -> new RuntimeException("Task not found"));
+    task.setPriority(priority);
+    return "Priority updated successfully";
+  }
+
+  @Override
+  public List<TaskManagementDto> fetchByPriority(Priority priority) {
+    List<TaskManagement> all = taskRepository.findAll();
+    List<TaskManagement> filtered = all.stream()
+        .filter(task -> task.getPriority() == priority)
+        .collect(Collectors.toList());
+    return taskMapper.modelListToDtoList(filtered);
   }
 }
