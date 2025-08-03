@@ -115,11 +115,14 @@ public class TaskManagementServiceImpl implements TaskManagementService {
         if (task.getStatus() == TaskStatus.CANCELLED) {
           return false;
         }
-        long startTime = task.getStartTime();
+
+        Long startTimeObj = task.getStartTime();
+        if (startTimeObj == null) return false;
+
+        long startTime = startTimeObj;
         boolean withinRange = startTime >= from && startTime <= to;
 
-        boolean stillActive = startTime < from && 
-        (task.getStatus() == TaskStatus.ASSIGNED || task.getStatus() == TaskStatus.STARTED);
+        boolean stillActive = startTime < from && (task.getStatus() == TaskStatus.ASSIGNED || task.getStatus() == TaskStatus.STARTED);
 
         return withinRange || stillActive;
       })
